@@ -1,1 +1,19 @@
 apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-web-deploy
+  labels:
+      app: mywebApp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: mywebApp
+  template:
+    metadata:
+      labels:
+        app: mywebApp
+    spec:
+      containers:
+      - name: mywebApp-container
+        image: savinaykumar85/myimage:v1
