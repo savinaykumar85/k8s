@@ -1,0 +1,38 @@
+Node1: K8s master
+Node2:- Jenkins server & Ansible server
+Node3:- K8 worker Node
+
+******************************************
+All the nodes are having SSH authentication using public Key.
+Dev. will write the deployment file and commit  the code to github repo[k8s]
+Once new commit happens git will trigger the webhook PollSCM.
+After this jenkins job will triger and it first download the code  form github  and then copy to k8s master node.
+Then it will execute the shell in build section .
+****************************************
+Action :-
+1:- first jenkins will copy the code to k8 master
+2:- will check replace the deplyment with latest  code and verify that the deployment is up and running
+3:- It there will be no deployment then it will create the deployment with the latest code.
+4:- It will also check the NodePort service if absent it will create the NodePort service
+**************************************
+Build Shell 
+scp * root@k-master:/root/project
+sudo ssh  -T k-master<<'EOT'
+if
+kubectl get deployments my-web-deploy
+then
+kubectl replace -f /root/project/deployment.yaml
+echo "Already running with latest Deployment"
+
+else
+kubectl create -f /root/project/deployment.yaml
+fi
+if
+kubectl get service my-web-deploy
+then
+echo "Already exposed"
+else
+kubectl expose deployments my-web-deploy  --port=80 --type=NodePort
+fi
+
+EOT
