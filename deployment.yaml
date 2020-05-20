@@ -3,17 +3,17 @@ kind: Deployment
 metadata:
   name: my-web-deploy
   labels:
-      app: mywebApp
+      app: mywebapp
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: mywebApp
+      app: mywebapp
   template:
     metadata:
       labels:
-        app: mywebApp
+        app: mywebapp
     spec:
       containers:
-      - name: mywebApp-container
+      - name: mywebapp-container
         image: savinaykumar85/myimage:v1
